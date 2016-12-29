@@ -5,7 +5,7 @@ const MongoClient = require('mongodb').MongoClient;
 const app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
-app.set('view engine', 'ejs');
+app.set('view engine', 'pug');
 
 var db;
 
@@ -23,7 +23,7 @@ MongoClient.connect(process.env.MONGODB_URI || 'mongodb://heroku_3zwvsqsq:446onv
 app.get('/', (req, res) => {
   db.collection('quotes').find().toArray(function(err, results) {
     if (err) return console.log(err);
-    res.render('index.ejs', { quotes: results });
+    res.render('index', { quotes: results });
   });
 });
 
