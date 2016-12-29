@@ -3,21 +3,32 @@ extends layout
 block content
   div(class="container-fluid")
     div(class="row")
-      div(class="col-md-6 col-md-offset-3")
+      div(class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2")
         div(class="well well-sm")
-          strong PDFs Uploaded: #{pdfCount}
-          br
-          br
-          button(class="btn btn-primary") Upload PDFs
+          div
+            form(action="/searches" method="POST")
+              div(class="input-group")
+                input(type="text" class="form-control" placeholder="Search PDFs" name="term")
+                div(class="input-group-btn")
+                  button(type="submit" class="btn btn-default btn-primary") Search!
+          div(style="margin-top:15px;")
+            strong PDFs Uploaded: #{pdfCount}
+          div
+            button(class="btn btn-success") Upload PDFs
+
 
         h2 Previous Searches (#{searches.length})
-        table(class="table table-hover")
-          tr
-            th Search Term
-            th Results
-          each search in searches
+        div
+          table(class="table table-hover")
             tr
-              td
-                a(href="#")=search.term
-              td
-                a(href="#")=search.count
+              th Search Term
+              th(class="text-center") Results
+              th(class="text-right") Datetime
+            each search in searches
+              tr
+                td
+                  a(href="/searches/" + search._id)=search.term
+                td(class="text-center")
+                  a(href="#")=search.resultCount
+                td(class="text-right")
+                  a(href="#")=search.createdAt

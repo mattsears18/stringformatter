@@ -24,6 +24,10 @@ db.once('open', function() {
   });
 });
 
+/**
+ * GET /
+ * Get index of searches
+ */
 app.get('/', (req, res) => {
   Pdf.collection.count(function(err, pdfCount) {
     Search.find(function (err, searches) {
@@ -36,9 +40,26 @@ app.get('/', (req, res) => {
   });
 });
 
-app.post('/quotes', (req, res) => {
-  var newQuote = new Quote(req.body);
-  newQuote.save(function (err, quote) {
+/**
+ * GET /searches/:id
+ * Get index of searches
+ */
+app.get('/searches/:id', (req, res) => {
+  Search.findById(req.params.id, function(err, search) {
+    res.render('search', { search: search });
+  });
+});
+
+/**
+ * POST /searches
+ * Adds new search to the database.
+ */
+app.post('/searches', (req, res) => {
+  var data = req.body;
+  data.createdAt = Date();
+
+  var newSearch = new Search(data);
+  newSearch.save(function (err, quote) {
     if (err) console.log(err);
     console.log('saved to databse');
 
