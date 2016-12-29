@@ -1,15 +1,23 @@
-doctype html
-head
-  meta(charset="UTF-8")
-  title MY APP
+extends layout
 
-body May the Node and Express be with you.
-  ul(class="quotes")
-    each quote in quotes
-      li(class="quote")
-        span=quote.name + ' ' + quote.quote
+block content
+  div(class="container-fluid")
+    div(class="row")
+      div(class="col-md-6 col-md-offset-3")
+        div(class="well well-sm")
+          strong PDFs Uploaded: #{pdfCount}
+          br
+          br
+          button(class="btn btn-primary") Upload PDFs
 
-  form(action="/quotes" method="POST")
-    input(type="text" placeholder="name" name="name")
-    input(type="text" placeholder="quote" name="quote")
-    button(type="submit") Submit
+        h2 Previous Searches (#{searches.length})
+        table(class="table table-hover")
+          tr
+            th Search Term
+            th Results
+          each search in searches
+            tr
+              td
+                a(href="#")=search.term
+              td
+                a(href="#")=search.count

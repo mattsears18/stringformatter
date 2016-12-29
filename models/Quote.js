@@ -1,11 +1,6 @@
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
 
-var quoteSchema = new Schema({
+module.exports = mongoose.model('Quote', new mongoose.Schema({
   name: String,
   quote: String
-});
-
-var Quote = mongoose.model('Quote', quoteSchema);
-
-module.exports = Quote;
+}));

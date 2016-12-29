@@ -1,13 +1,7 @@
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
 
-var searchSchema = new Schema({
-    term: String,
-    pdfs: Number,
-    resultCount: Number,
-    createdAt: Date
-});
-
-var Search = mongoose.model('Search', searchSchema);
-
-module.exports = Search;
+module.exports = mongoose.model('Search', new mongoose.Schema({
+  term: String,
+  resultCount: Number,
+  results: String
+}));

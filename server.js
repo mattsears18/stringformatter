@@ -5,13 +5,17 @@ const mongoose = require('mongoose');
 
 const app = express();
 
-var Quote = require('./models/Quote');
+const Quote = require('./models/Quote');
+const Pdf = require('./models/Pdf');
+const Search = require('./models/Search');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'pug');
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://heroku_3zwvsqsq:446onvqsjjanf81skjhmf51it4@ds149278.mlab.com:49278/heroku_3zwvsqsq');
+
 var db = mongoose.connection;
+
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   port = process.env.PORT || 3000;
@@ -21,9 +25,14 @@ db.once('open', function() {
 });
 
 app.get('/', (req, res) => {
-  Quote.find(function (err, results) {
-    if (err) return console.error(err);
-    res.render('index', { quotes: results });
+  Pdf.collection.count(function(err, pdfCount) {
+    Search.find(function (err, searches) {
+      if (err) return console.error(err);
+      res.render('index', {
+        searches: searches,
+        pdfCount: pdfCount
+      });
+    });
   });
 });
 
