@@ -1,9 +1,20 @@
 var express = require('express');
-var bodyParser= require('body-parser');
+var bodyParser = require('body-parser');
+var path = require('path');
 var MongoClient = require('mongodb').MongoClient;
 var mongoose = require('mongoose');
 var multer = require('multer');
-var upload = multer({ dest: __dirname + '/public/uploads/' });
+
+var upload = multer({
+  dest: __dirname + '/public/uploads/',
+  fileFilter: function (req, file, cb) {
+    if (path.extname(file.originalname) !== '.pdf') {
+      return cb(null, false)
+    }
+
+    cb(null, true)
+  }
+});
 
 var app = express();
 
@@ -50,7 +61,7 @@ app.get('/', (req, res) => {
 app.get('/searches/:id', (req, res) => {
   Search.findById(req.params.id, function(err, search) {
     res.render('search', { search: search });
-  });
+  }).populate('articles');
 });
 
 /**
@@ -76,29 +87,12 @@ app.post('/searches', (req, res) => {
  */
 app.post('/articles', upload.array('pdfs', 1000), (req, res) => {
   req.files.forEach(function(file) {
-
+    file.createdAt = Date();
     var newArticle = new Article(file);
-    newArticle.save(function (err, quote) {
+    newArticle.save(function (err, article) {
       if (err) console.log(err);
-      console.log(file.originalname + ' saved to databse');
     });
   });
 
   res.redirect('/');
-
-
-
-
-  /*
-  var data = req.body;
-  data.createdAt = Date();
-
-  var newArticle = new Article(data);
-  newArticle.save(function (err, quote) {
-    if (err) console.log(err);
-    console.log('saved to databse');
-
-    res.redirect('/');
-  });
-  */
 });
