@@ -3,7 +3,9 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var MongoClient = require('mongodb').MongoClient;
 var mongoose = require('mongoose');
+
 var multer = require('multer');
+var PDFParser = require("pdf2json");
 
 var upload = multer({
   dest: __dirname + '/public/uploads/',
@@ -87,12 +89,21 @@ app.post('/searches', (req, res) => {
  */
 app.post('/articles', upload.array('pdfs', 1000), (req, res) => {
   req.files.forEach(function(file) {
-    file.createdAt = Date();
-    var newArticle = new Article(file);
-    newArticle.save(function (err, article) {
-      if (err) console.log(err);
-    });
-  });
+    file.pdfParser = new PDFParser(this,1);
 
-  res.redirect('/');
+    file.pdfParser.on("pdfParser_dataError", errData => console.error(errData.parserError) );
+    file.pdfParser.on("pdfParser_dataReady", pdfData => {
+      file.text = file.pdfParser.getRawTextContent();
+
+      file.createdAt = Date();
+      var newArticle = new Article(file);
+      newArticle.save(function (err, article) {
+        if (err) console.log(err);
+
+        res.redirect('/');
+      });
+    });
+
+    file.pdfParser.loadPDF(__dirname + "/public/uploads/" + file.filename);
+  });
 });
