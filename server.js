@@ -6,10 +6,11 @@ const mongoose = require('mongoose');
 const app = express();
 
 const Quote = require('./models/Quote');
-const Pdf = require('./models/Pdf');
+const Article = require('./models/Article');
 const Search = require('./models/Search');
 
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static('public'));
 app.set('view engine', 'pug');
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://heroku_3zwvsqsq:446onvqsjjanf81skjhmf51it4@ds149278.mlab.com:49278/heroku_3zwvsqsq');
@@ -29,14 +30,14 @@ db.once('open', function() {
  * Get index of searches
  */
 app.get('/', (req, res) => {
-  Pdf.collection.count(function(err, pdfCount) {
+  Article.collection.count(function(err, articleCount) {
     Search.find(function (err, searches) {
       if (err) return console.error(err);
       res.render('index', {
         searches: searches,
-        pdfCount: pdfCount
+        articleCount: articleCount
       });
-    });
+    }).sort('-createdAt');
   });
 });
 
@@ -60,6 +61,23 @@ app.post('/searches', (req, res) => {
 
   var newSearch = new Search(data);
   newSearch.save(function (err, quote) {
+    if (err) console.log(err);
+    console.log('saved to databse');
+
+    res.redirect('/');
+  });
+});
+
+/**
+ * POST /articles
+ * Adds new article to the database.
+ */
+app.post('/articles', (req, res) => {
+  var data = req.body;
+  data.createdAt = Date();
+
+  var newArticle = new Article(data);
+  newArticle.save(function (err, quote) {
     if (err) console.log(err);
     console.log('saved to databse');
 
