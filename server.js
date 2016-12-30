@@ -1,13 +1,15 @@
-const express = require('express');
-const bodyParser= require('body-parser');
-const MongoClient = require('mongodb').MongoClient;
-const mongoose = require('mongoose');
+var express = require('express');
+var bodyParser= require('body-parser');
+var MongoClient = require('mongodb').MongoClient;
+var mongoose = require('mongoose');
+var multer = require('multer');
+var upload = multer({ dest: __dirname + '/public/uploads/' });
 
-const app = express();
+var app = express();
 
-const Quote = require('./models/Quote');
-const Article = require('./models/Article');
-const Search = require('./models/Search');
+var Quote = require('./models/Quote');
+var Article = require('./models/Article');
+var Search = require('./models/Search');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('public'));
@@ -72,7 +74,22 @@ app.post('/searches', (req, res) => {
  * POST /articles
  * Adds new article to the database.
  */
-app.post('/articles', (req, res) => {
+app.post('/articles', upload.array('pdfs', 1000), (req, res) => {
+  req.files.forEach(function(file) {
+
+    var newArticle = new Article(file);
+    newArticle.save(function (err, quote) {
+      if (err) console.log(err);
+      console.log(file.originalname + ' saved to databse');
+    });
+  });
+
+  res.redirect('/');
+
+
+
+
+  /*
   var data = req.body;
   data.createdAt = Date();
 
@@ -83,4 +100,5 @@ app.post('/articles', (req, res) => {
 
     res.redirect('/');
   });
+  */
 });

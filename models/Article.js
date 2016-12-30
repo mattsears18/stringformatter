@@ -1,7 +1,9 @@
 var mongoose = require('mongoose');
 
 module.exports = mongoose.model('Article', new mongoose.Schema({
-  name: String,
+  originalname: String,
+  filename: String,
+  mimetype: String,
   text: String,
   pageCount: Number,
   createdAt: Date

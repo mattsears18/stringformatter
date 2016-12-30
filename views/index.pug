@@ -15,8 +15,8 @@ block content
           div(style="margin-top:15px;")
             strong Articles Uploaded: #{articleCount}
           div
-            form(method="POST" action="/articles")
-              input(type="file" multiple class="hidden" id="articleUploadFile")
+            form(method="POST" action="/articles" enctype="multipart/form-data")
+              input(type="file" multiple class="hidden" id="articleUploadFile" name="pdfs")
               button(type="button" class="btn btn-success" id="articleUploadBtn") Upload Articles
 
 
@@ -33,7 +33,7 @@ block content
                 td
                   a(href="/searches/" + search._id)=search.term
                 td(class="text-center")
-                  a(href="/searches/" + search._id)=search.resultCount
+                  a(href="/searches/" + search._id)=search.articles.length
                 td
                   a(href="/searches/" + search._id)=search.createdAt
                 td
