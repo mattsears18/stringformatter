@@ -28,8 +28,13 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('public'));
 app.set('view engine', 'pug');
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://heroku_3zwvsqsq:446onvqsjjanf81skjhmf51it4@ds149278.mlab.com:49278/heroku_3zwvsqsq');
+var options = { server: { socketOptions: { keepAlive: 3000000, connectTimeoutMS: 300000 } },
+                replset: { socketOptions: { keepAlive: 3000000, connectTimeoutMS : 300000 } } };
 
+//var mongodbUri = process.env.MONGODB_URI || 'localhost/test';
+var mongodbUri = process.env.MONGODB_URI || 'mongodb://heroku_3zwvsqsq:446onvqsjjanf81skjhmf51it4@ds149278.mlab.com:49278/heroku_3zwvsqsq';
+
+mongoose.connect(mongodbUri, options);
 var db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -84,10 +89,24 @@ app.post('/searches', (req, res) => {
 });
 
 /**
+* GET /
+* Get index of searches
+*/
+app.get('/articles', (req, res) => {
+  Article.find(function (err, articles) {
+    if (err) return console.error(err);
+    res.render('articles', {
+      articles: articles
+    });
+  }).sort('originalname');
+});
+
+/**
  * POST /articles
  * Adds new article to the database.
  */
 app.post('/articles', upload.array('pdfs', 1000), (req, res) => {
+  var counter = 0;
   req.files.forEach(function(file) {
     file.pdfParser = new PDFParser(this,1);
 
@@ -98,9 +117,16 @@ app.post('/articles', upload.array('pdfs', 1000), (req, res) => {
       file.createdAt = Date();
       var newArticle = new Article(file);
       newArticle.save(function (err, article) {
-        if (err) console.log(err);
+        if (err) res.send(err);
 
-        res.redirect('/');
+        console.log(article.originalname);
+        counter++;
+        console.log(counter + ' : ' + req.files.length);
+
+        if(counter === req.files.length) {
+          console.log('FINISHED UPLADING ALL FILES!');
+          res.redirect('/');
+        }
       });
     });
 
