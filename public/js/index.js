@@ -13,7 +13,7 @@ $(function() {
 
     while(i > 0) {
       oldI = i;
-      
+
       array.splice(i, 1);
 
       array[i] = array[i].replace('Vertices', '').trim();
@@ -32,12 +32,13 @@ $(function() {
 
     i = oldI;
 
-    array.splice(i + 17, 3);
+    array.splice(i + 17, 1);
     array.splice(i + 18, 1);
     array.splice(i + 19, 1);
     array.splice(i + 20, 1);
     array.splice(i + 21, 1);
-    array.splice(i + 26, 1);
+    array.splice(i + 22, 1);
+
     array.splice(i + 27, 1);
     array.splice(i + 28, 1);
     array.splice(i + 29, 1);
@@ -50,7 +51,9 @@ $(function() {
     array.splice(i + 36, 1);
     array.splice(i + 37, 1);
     array.splice(i + 38, 1);
-    array.splice(i + 41, 1);
+    array.splice(i + 39, 1);
+
+    array.splice(i + 42, 1);
 
     array.splice(-1);
 
