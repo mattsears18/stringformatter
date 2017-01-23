@@ -9,15 +9,11 @@ $(function() {
 
     var i = array.indexOf("Description");
 
-    var type;
+    var j;
 
     while(i > 0) {
-      if(array[i-2][0] === "[") {
-        type = 'start';
-      } else {
-        type = 'continue';
-      }
-
+      oldI = i;
+      
       array.splice(i, 1);
 
       array[i] = array[i].replace('Vertices', '').trim();
@@ -31,30 +27,32 @@ $(function() {
       array.splice(i + 15, 1);
       array.splice(i + 16, 1);
 
-      if(type == 'continue') {
-        array.splice(i + 17, 3);
-        array.splice(i + 18, 1);
-        array.splice(i + 19, 1);
-        array.splice(i + 20, 1);
-        array.splice(i + 21, 1);
-        array.splice(i + 26, 1);
-        array.splice(i + 27, 1);
-        array.splice(i + 28, 1);
-        array.splice(i + 29, 1);
-        array.splice(i + 30, 1);
-        array.splice(i + 31, 1);
-        array.splice(i + 32, 1);
-        array.splice(i + 33, 1);
-        array.splice(i + 34, 1);
-        array.splice(i + 35, 1);
-        array.splice(i + 36, 1);
-        array.splice(i + 37, 1);
-        array.splice(i + 38, 1);
-        array.splice(i + 41, 1);
-      }
-
       var i = array.indexOf("Description");
     }
+
+    i = oldI;
+
+    array.splice(i + 17, 3);
+    array.splice(i + 18, 1);
+    array.splice(i + 19, 1);
+    array.splice(i + 20, 1);
+    array.splice(i + 21, 1);
+    array.splice(i + 26, 1);
+    array.splice(i + 27, 1);
+    array.splice(i + 28, 1);
+    array.splice(i + 29, 1);
+    array.splice(i + 30, 1);
+    array.splice(i + 31, 1);
+    array.splice(i + 32, 1);
+    array.splice(i + 33, 1);
+    array.splice(i + 34, 1);
+    array.splice(i + 35, 1);
+    array.splice(i + 36, 1);
+    array.splice(i + 37, 1);
+    array.splice(i + 38, 1);
+    array.splice(i + 41, 1);
+
+    array.splice(-1);
 
     var newString = array.join(', ');
     $('#string').val(newString);
