@@ -47,3 +47,6 @@ jspm_packages
 .yarn-integrity
 
 public/uploads/
+
+.gitignore
+node_modules
