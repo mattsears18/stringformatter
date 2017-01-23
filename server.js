@@ -1,5 +1,4 @@
 var express = require('express');
-var bodyParser = require('body-parser');
 var path = require('path');
 
 var app = express();
@@ -13,10 +12,4 @@ app.listen(port, () => {
   console.log('listening on ' + port);
 });
 
-/**
- * GET /
- * Get index of searches
- */
-app.get('/', (req, res) => {
-  res.render('index');
-});
+app.get('/', (req, res) => { res.render('index') });
